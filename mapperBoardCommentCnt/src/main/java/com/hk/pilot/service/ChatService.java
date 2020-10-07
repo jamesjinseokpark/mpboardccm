@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.hk.pilot.dto.Chat;
 import com.hk.pilot.dto.Criteria;
+import com.hk.pilot.dto.SearchCriteria;
 import com.hk.pilot.mapper.ChatMapper;
 
 @Service
@@ -27,19 +28,19 @@ public class ChatService {
 	}
 	
 	//게시글 목록 조회
-	public List<Chat> list(Criteria cri){
+	public List<Chat> list(SearchCriteria scri){
 		
 		System.out.println("chatService-list 호출");
 		
-		return chatMapper.list(cri);
+		return chatMapper.list(scri);
 	}
 	
 	//게시물 총 개수
-	public int listCount() {
+	public int listCount(SearchCriteria scri) {
 		
 		System.out.println("chatService-listCount 호출");
 		
-		return chatMapper.listCount();
+		return chatMapper.listCount(scri);
 	}
 	
 	//게시물 상세 조회하기

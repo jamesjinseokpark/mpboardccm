@@ -13,6 +13,7 @@ import com.hk.pilot.dto.Chat;
 import com.hk.pilot.dto.ChatComment;
 import com.hk.pilot.dto.Criteria;
 import com.hk.pilot.dto.PageMaker;
+import com.hk.pilot.dto.SearchCriteria;
 import com.hk.pilot.service.ChatCommentService;
 import com.hk.pilot.service.ChatService;
 
@@ -44,15 +45,15 @@ public class ChatController {
 	
 	//게시글 목록 조회
 	@GetMapping(value="/chat/list")
-	public String list(Criteria cri, Model model) {
+	public String list(SearchCriteria scri, Model model) {
 		System.out.println("목록 조회 list 호출");
-		model.addAttribute("list", chatService.list(cri));
+		model.addAttribute("list", chatService.list(scri));
 		
 		PageMaker pageMaker = new PageMaker();
 		
-		pageMaker.setCri(cri);
+		pageMaker.setCri(scri);
 		
-		pageMaker.setTotalCount(chatService.listCount());
+		pageMaker.setTotalCount(chatService.listCount(scri));
 		
 		model.addAttribute("pageMaker", pageMaker);
 				

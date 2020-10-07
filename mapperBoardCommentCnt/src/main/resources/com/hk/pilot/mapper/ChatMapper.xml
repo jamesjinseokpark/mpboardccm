@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.hk.pilot.mapper.ChatMapper">
-	
+
 	<!-- 게시글 등록 -->
 	<insert id="write">
 
@@ -14,7 +14,7 @@
 		#{c_title} )
 
 	</insert>
-	
+
 	<!-- 게시글 목록 -->
 	<select id="list" resultType="com.hk.pilot.dto.Chat"
 		parameterType="com.hk.pilot.dto.Criteria">
@@ -31,15 +31,27 @@
 	</select>
 
 	<!-- 게시글 총 개수 -->
-	<select id="listCount" resultType="int">
+	<select id="listCount"
+		parameterType="com.hk.pilot.dto.SerchCriteria" resultType="int">
 
 		SELECT COUNT(c_no)
 		FROM CHAT
-		WHERE c_no > 0
+		WHERE 1 = 1
+		<include refid="search"></include>
+		And c_no > 0
+	</select>
 
+	<sql id="search">
+		<if test="searchType != null">
+			<if test="searchType == 't'.toString()">AND TITLE LIKE '%' || #{keyword} || '%'</if>
+			<if test="searchType == 'c'.toString()">AND CONTENT LIKE '%' || #{keyword} || '%'</if>
+			<if test="searchType == 'w'.toString()">AND WRITER LIKE '%' || #{keyword} || '%'</if>
+			<if test="searchType == 'tc'.toString()">AND (TITLE LIKE '%' || #{keyword} || '%') or (CONTENT
+				LIKE '%' || #{keyword} || '%')</if>
+		</if>
+	</sql>
 
 	<!-- 게시글 상세조회 -->
-	</select>
 
 	<select id="selectOne" parameterType="int"
 		resultType="com.hk.pilot.dto.Chat">
@@ -48,7 +60,7 @@
 		where c_no = #{c_no}
 
 	</select>
-	
+
 	<!-- 게시글 수정 -->
 	<update id="update" parameterType="com.hk.pilot.dto.Chat">
 
@@ -57,16 +69,18 @@
 		c_content =
 		#{c_content},
 		c_title = #{c_title}
-		WHERE c_no = #{c_no}
+		WHERE c_no =
+		#{c_no}
 
 	</update>
-	
+
 	<!-- 게시글 삭제 -->
-	
+
 	<delete id="delete" parameterType="int">
-	
-	DELETE FROM CHAT WHERE c_no = #{c_no}
-	
+
+		DELETE FROM CHAT WHERE c_no =
+		#{c_no}
+
 	</delete>
 
 
