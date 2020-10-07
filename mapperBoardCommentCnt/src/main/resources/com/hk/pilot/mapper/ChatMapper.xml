@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hk.pilot.mapper.ChatMapper">
+	
+	<!-- 게시글 등록 -->
+	<insert id="write">
+
+		INSERT INTO CHAT (W_ID, C_NO, C_DATE, C_CONTENT,
+		C_TITLE)
+		VALUES(#{w_id}, CHAT_seq.nextval, sysdate, #{c_content} ,
+		#{c_title} )
+
+	</insert>
+	
+	<!-- 게시글 목록 -->
+	<select id="list" resultType="com.hk.pilot.dto.Chat"
+		parameterType="com.hk.pilot.dto.Criteria">
+		SELECT w_id, c_no, c_date, c_content, c_title
+		FROM
+		(SELECT w_id,
+		c_no, c_date, c_content, c_title,
+		row_number()
+		over(ORDER
+		BY c_no DESC) as rnum FROM chat) WHERE rnum
+		BETWEEN #{rowStart} AND
+		#{rowEnd}
+		ORDER BY c_no DESC
+	</select>
+
+	<!-- 게시글 총 개수 -->
+	<select id="listCount" resultType="int">
+
+		SELECT COUNT(c_no)
+		FROM CHAT
+		WHERE c_no > 0
+
+
+	<!-- 게시글 상세조회 -->
+	</select>
+
+	<select id="selectOne" parameterType="int"
+		resultType="com.hk.pilot.dto.Chat">
+
+		SELECT w_id, c_no, c_date, c_content, c_title FROM CHAT
+		where c_no = #{c_no}
+
+	</select>
+	
+	<!-- 게시글 수정 -->
+	<update id="update" parameterType="com.hk.pilot.dto.Chat">
+
+		UPDATE CHAT SET w_id =
+		#{w_id},
+		c_content =
+		#{c_content},
+		c_title = #{c_title}
+		WHERE c_no = #{c_no}
+
+	</update>
+	
+	<!-- 게시글 삭제 -->
+	
+	<delete id="delete" parameterType="int">
+	
+	DELETE FROM CHAT WHERE c_no = #{c_no}
+	
+	</delete>
+
+
+
+
+</mapper>
